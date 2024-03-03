@@ -21,14 +21,11 @@ class Cart(Ownable):
         return sum(price_list)
 
     def check_out(self):
-        # Transferir el precio de compra de todos los artículos del carrito
-        # del monedero del propietario del carrito al monedero del propietario del artículo.
         for item in self.items:
             item.owner.wallet.deposit(item.price)
             self.owner.wallet.withdraw(item.price)
             item.set_owner(self.owner)
 
-        # Vaciar el contenido del carrito.
         self.items = []
 
 # Requisitos
