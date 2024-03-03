@@ -23,6 +23,7 @@ customer.wallet.deposit(int(input()))
 
 print("🛍️ Comenzando compras")
 end_shopping = False
+
 while not end_shopping:
     print("📜 Lista de productos")
     seller.show_items()
@@ -36,28 +37,40 @@ while not end_shopping:
     items = seller.pick_items(number, quantity)
     for item in items:
         customer.cart.add(item)
+
     print("🛒 Contenido del carrito")
     customer.cart.show_items()
     print(f"🤑 Monto total: {customer.cart.total_amount()}")
 
-    print("😭 ¿Deseas finalizar las compras? (sí/no)")
-    end_shopping = input() == "sí"
+    if customer.wallet.balance < customer.cart.total_amount():
+        print("No tienes suficiente saldo en la billetera para comprar más productos.")
+        print("¿Deseas recargar tu billetera? (si/no)")
+        if input().lower() == "si":
+            print("🏧 Por favor, introduce la cantidad a recargar en tu billetera")
+            customer.wallet.deposit(int(input()))
+            continue 
 
-print("💸 ¿Deseas confirmar la compra? (sí/no)")
-if input() == "sí":
-    customer.cart.check_out()
+        break
 
-print("୨୧┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈ Resultados ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈୨୧")
-print(f"️🛍️ ️Productos de {customer.name}")
-customer.show_items()
-print(f"😱👛 Saldo en la billetera de {customer.name}: {customer.wallet.balance}")
+    print("😭 ¿Deseas finalizar las compras? (si/no)")
+    end_shopping = input().lower() == "si"
 
-print(f"📦 Estado del inventario de {seller.name}")
-seller.show_items()
-print(f"😻👛 Saldo en la billetera de {seller.name}: {seller.wallet.balance}")
+if end_shopping:
+    print("💸 ¿Deseas confirmar la compra? (si/no)")
+    if input().lower() == "si":
+        customer.cart.check_out()
 
-print("🛒 Contenido del carrito")
-customer.cart.show_items()
-print(f"🌚 Monto total: {customer.cart.total_amount()}")
+    print("୨୧┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈ Resultados ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈୨୧")
+    print(f"️🛍️ ️Productos de {customer.name}")
+    customer.show_items()
+    print(f"😱👛 Saldo en la billetera de {customer.name}: {customer.wallet.balance}")
+
+    print(f"📦 Estado del inventario de {seller.name}")
+    seller.show_items()
+    print(f"😻👛 Saldo en la billetera de {seller.name}: {seller.wallet.balance}")
+
+    print("🛒 Contenido del carrito")
+    customer.cart.show_items()
+    print(f"🌚 Monto total: {customer.cart.total_amount()}")
 
 print("🎉 Fin")
